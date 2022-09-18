@@ -1,11 +1,27 @@
-.app {
+html {
     background-color: #40260aff;
 }
-h1 {
+body {
+    background-color: #40260aff;
     color: #ff9b27;
+}
+.title {
+    display: flex;
+    justify-content: flex-start;
     margin: 10px;
 }
+.global-search {
+    display: flex;
+    justify-content: flex-end;
+    margin: 10px;
+}
+.global-search input {
+    border-radius: 25px;
+    background-color: #ff9b27;
+    color: #40260aff;
+}
 .nav-list {
+    display: flex;
     color: #ff9b27;
 }
 .nav-list ul {
