@@ -1,0 +1,19 @@
+.app {
+    background-color: #40260aff;
+}
+h1 {
+    color: #ff9b27;
+    margin: 10px;
+}
+.nav-list {
+    color: #ff9b27;
+}
+.nav-list ul {
+    list-style: none;
+    position: absolute;
+    top: 50%;
+    padding-left: 10%;
+}
+.nav-list li {
+    margin: 20% 0;
+}
