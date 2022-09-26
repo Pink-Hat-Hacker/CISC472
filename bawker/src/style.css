@@ -10,16 +10,10 @@ body {
     display: flex;
     justify-content: flex-start;
     margin: 10px;
+    color: #ff9b27;
 }
-.global-search {
-    display: flex;
-    justify-content: flex-end;
-    margin: 10px;
-}
-.global-search input {
-    border-radius: 25px;
-    background-color: #ff9b27;
-    color: #40260aff;
+.navbar {
+    background-color: #40260aff; 
 }
 .nav-list {
     display: flex;
