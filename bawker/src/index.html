@@ -9,7 +9,8 @@
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Oswald&family=Roboto+Flex:opsz@8..144&display=swap');
         </style>
-        <script type="text/javascript" src="script.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+        <script type="text/javascript" src="script.js"></script> 
     </head>
     <body>
         <nav class="navbar justify-content-between">
@@ -41,11 +42,11 @@
             <div id="box">
                 <h2> What's on your mind? </h2>
                 <div class="bottom-container">
-                    <textarea name="tweet" id="content" cols="30" rows="10" placeholder="bawk bawk bawk..."></textarea>
+                    <textarea name="tweet" maxlength="140" placeholder="bawk bawk bawk..."></textarea>
                     <div class="main-tweet-row">
                         <p>media</p>
                         <p>text edit</p>
-                        <span id="countdown">140</span>
+                        <span id='countdown'> 140 </span>
                         <button class="main-tweet-btn"> BAWK </button>
                     </div>
                 </div>
