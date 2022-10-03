@@ -12,6 +12,9 @@ body {
     margin: 10px;
     color: #ff9b27;
 }
+.search-bar {
+    margin-right: 10px;
+}
 .navbar {
     background-color: #40260aff; 
 }
@@ -28,24 +31,82 @@ body {
 .nav-list li {
     margin: 20% 0;
 }
+.container {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+}
 #box {
     position: absolute;
     top: 50%;
     left: 50%;
-    height: 400px;
-    width: 60%;
-    border: 2px #ff9b27;
+    height: 200px;
+    width: 50%;
 }
-.top {
-    height: 35px;
-    width: 100%;
-    border-radius: 5px 5px 0px;
-}
-.bottom {
+.bottom-container {
     display: inline-block;
     position: absolute;
-    height: 80%;
+    height: 82%;
     width: 100%;
+    border-radius: 0px 0px 5px 5px;
+}
+.main-tweet-row * {
+    white-space: nowrap;
+    display: inline;
+    margin: 20px 10px 5px 5px;
+}
+textarea {
+    margin-top: 10px;
+    width: 100%;
+    height: 90px;
+    border-radius: 5px;
+    font-size: 20px;
+    resize: none;
+}
+.main-tweet-btn {
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+/* html {
+    background-color: #40260aff;
+    font-family: 'Oswald', sans-serif;
+}
+body {
+    background-color: #40260aff;
+    color: #ff9b27;
+}
+.title {
+    display: flex;
+    justify-content: flex-start;
+    margin: 10px;
+    color: #ff9b27;
+}
+.navbar {
+    background-color: #40260aff; 
+}
+.nav-list {
+    display: flex;
+    color: #ff9b27;
+}
+.nav-list ul {
+    list-style: none;
+    position: absolute;
+    top: 50%;
+    padding-left: 10%;
+}
+.nav-list li {
+    margin: 20% 0;
+}
+.container {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+}
+.bottom-container {
+    display: inline-block;
+    position: absolute;
+    height: 100%;
+    width: 80%;
     border-radius: 0px 0px 5px;
 }
 textarea {
@@ -55,15 +116,4 @@ textarea {
     border-radius: 5px;
     font-size: 20px;
     resize: none;
-}
-.row {
-    margin: 20px 10px 5px 5px;
-}
-.bottom-right {
-    position: absolute;
-    right: 30px;
-}
-button {
-    margin-bottom: 10px;
-    font-size: 15px;
-}
+} */
