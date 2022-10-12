@@ -14,56 +14,58 @@
     </head>
     <body>
         <!-- Log In -->
-        <div class="login-div">
+        <div id="login_div" class="login-div">
             <h3> BAWKER LOGIN</h3>
-            <input type="username" placeholder="username"/>
-            <input type="password" placeholder="password"/>
-            <button onclick="login()"> Login </button>
+            <input type="username" placeholder="username" id="user_field"/>
+            <input type="password" placeholder="password" id="pass_field"/>
+            <button onclick="mylogin()"> Login </button>
         </div>
 
-        <!--Top Nav-->
-        <nav class="navbar justify-content-between">
-            <a class="navbar-brand">
-                <h1 class="title"> BAWKER </h1>
-            </a>
-            <form class="search-bar">
-              <input type="search" placeholder="Search">
-              <button type="submit">Search</button>
-            </form>
-        </nav>
-        <!--Side Nav-->
-        <nav role="navigation" class="nav-list">
-            <ul>
-                <li>
-                    Home
-                </li>
-                <li>
-                    Notifications
-                </li>
-                <li>
-                    Messages
-                </li>
-                <li>
-                    Settings
-                </li>
-            </ul>
-        </nav>
-        <!--Main Tweet Box-->
-        <div class="container">
-            <div id="box">
-                <h2> What's on your mind? </h2>
-                <div class="bottom-container">
-                    <textarea name="tweet" maxlength="140" placeholder="bawk bawk bawk..."></textarea>
-                    <div class="main-tweet-row">
-                        <p>media</p>
-                        <p>text edit</p>
-                        <span id='countdown'> 140 </span>
-                        <button class="main-tweet-btn"> BAWK </button>
+        <div id="user_div">
+            <!--Top Nav-->
+            <nav class="navbar justify-content-between">
+                <a class="navbar-brand">
+                    <h1 class="title"> BAWKER </h1>
+                </a>
+                <form class="search-bar">
+                <input type="search" placeholder="Search">
+                <button type="submit">Search</button>
+                </form>
+            </nav>
+            <!--Side Nav-->
+            <nav role="navigation" class="nav-list">
+                <ul>
+                    <li>
+                        Home
+                    </li>
+                    <li>
+                        Notifications
+                    </li>
+                    <li>
+                        Messages
+                    </li>
+                    <li>
+                        Settings
+                    </li>
+                </ul>
+            </nav>
+            <!--Main Tweet Box-->
+            <div class="container">
+                <div id="box">
+                    <h2> What's on your mind? </h2>
+                    <div class="bottom-container">
+                        <textarea name="tweet" maxlength="140" placeholder="bawk bawk bawk..."></textarea>
+                        <div class="main-tweet-row">
+                            <p>media</p>
+                            <p>text edit</p>
+                            <span id='countdown'> 140 </span>
+                            <button class="main-tweet-btn"> BAWK </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
+        
         <!-- SCRIPTS -->
         <script type="module">
             // Import the functions you need from the SDKs you need
@@ -88,6 +90,6 @@
             const app = initializeApp(firebaseConfig);
             const analytics = getAnalytics(app);
           </script>
-        <script src="script.js"></script>
+        <script type="module" src="script.js"></script>
     </body>
 </html>
