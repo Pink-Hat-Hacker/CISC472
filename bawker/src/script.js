@@ -1,3 +1,9 @@
+/* ---------------------------------------------------------- */
+
+function login() {
+    window.alert("woking");
+}
+
 $(document).ready(function(){
     //Character limit js
     var maxLength = 140;

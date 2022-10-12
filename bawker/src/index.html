@@ -10,11 +10,17 @@
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Oswald&family=Roboto+Flex:opsz@8..144&display=swap');
         </style>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
-        <script type="text/javascript" src="script.js"></script>
-
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </head>
     <body>
+        <!-- Log In -->
+        <div class="login-div">
+            <h3> BAWKER LOGIN</h3>
+            <input type="username" placeholder="username"/>
+            <input type="password" placeholder="password"/>
+            <button onclick="login()"> Login </button>
+        </div>
+
         <!--Top Nav-->
         <nav class="navbar justify-content-between">
             <a class="navbar-brand">
@@ -25,7 +31,6 @@
               <button type="submit">Search</button>
             </form>
         </nav>
-        
         <!--Side Nav-->
         <nav role="navigation" class="nav-list">
             <ul>
@@ -43,7 +48,6 @@
                 </li>
             </ul>
         </nav>
-        
         <!--Main Tweet Box-->
         <div class="container">
             <div id="box">
@@ -59,5 +63,31 @@
                 </div>
             </div>
         </div>
+
+        <!-- SCRIPTS -->
+        <script type="module">
+            // Import the functions you need from the SDKs you need
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/9.12.0/firebase-app.js";
+            import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.12.0/firebase-analytics.js";
+            // TODO: Add SDKs for Firebase products that you want to use
+            // https://firebase.google.com/docs/web/setup#available-libraries
+          
+            // Your web app's Firebase configuration
+            // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+            const firebaseConfig = {
+              apiKey: "AIzaSyD077VIgWG-33DwRks6uFmMwbgfClPDlEI",
+              authDomain: "cisc472-bawker.firebaseapp.com",
+              projectId: "cisc472-bawker",
+              storageBucket: "cisc472-bawker.appspot.com",
+              messagingSenderId: "859322932460",
+              appId: "1:859322932460:web:218c4619be4da4c4cc19c9",
+              measurementId: "G-NLXEN0T0EP"
+            };
+          
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+            const analytics = getAnalytics(app);
+          </script>
+        <script src="script.js"></script>
     </body>
 </html>
