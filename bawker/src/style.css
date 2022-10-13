@@ -56,6 +56,21 @@ body {
 .search-bar {
     margin-right: 10px;
 }
+#search_bar_btn {
+    background: #40260aff;
+    color: #ff9b27;
+    border: 1px solid #ff9b27;
+    border-radius: 5px;
+    padding: 15px;
+    display: inline;
+    transition: 0.3s;
+    -webkit-transition: 0.3s;
+    -moz-transition: 0.3s; 
+}
+#search_bar_btn:hover {
+    background: #ff9b27;
+    color: #40260aff; 
+}
 .navbar {
     background-color: #40260aff; 
 }
@@ -71,6 +86,22 @@ body {
 }
 .nav-list li {
     margin: 20% 0;
+}
+.nav-list button {
+    background: #40260aff;
+    color: #ff9b27;
+    border: 1px solid #ff9b27;
+    border-radius: 5px;
+    padding: 15px;
+    display: block;
+    width: 100%;
+    transition: 0.3s;
+    -webkit-transition: 0.3s;
+    -moz-transition: 0.3s; 
+}
+.nav-list button:hover {
+    background: #ff9b27;
+    color: #40260aff; 
 }
 .container {
     display: flex;
@@ -105,6 +136,18 @@ textarea {
     resize: none;
 }
 .main-tweet-btn {
-    margin-bottom: 10px;
-    font-size: 15px;
+    background: #40260aff;
+    color: #ff9b27;
+    border: 1px solid #ff9b27;
+    border-radius: 5px;
+    padding: 15px;
+    display: block;
+    width: 100%;
+    transition: 0.3s;
+    -webkit-transition: 0.3s;
+    -moz-transition: 0.3s;
+}
+.main-tweet-btn:hover {
+    background: #ff9b27;
+    color: #40260aff;
 }
