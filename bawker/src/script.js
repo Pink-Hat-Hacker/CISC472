@@ -1,3 +1,4 @@
+/* --- FIREBASE CONFIGURATION --- */
 const firebaseConfig = {
   apiKey: "AIzaSyD077VIgWG-33DwRks6uFmMwbgfClPDlEI",
   authDomain: "cisc472-bawker.firebaseapp.com",
@@ -9,7 +10,7 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 
-// //THE KEY AUTH LISTENING FUNCTION IS THIS ONE:
+//THE KEY AUTH LISTENING FUNCTION IS THIS ONE:
 firebase.auth().onAuthStateChanged((user) => {
     if (user) {
       // User is signed in, see docs for a list of available properties
@@ -23,9 +24,16 @@ firebase.auth().onAuthStateChanged((user) => {
       document.getElementById("login_div").style.display = "block";
     }
 });
+
+/* --- Login / Logout Functions --- */
 function login() {
     var userName = document.getElementById("user_field").value;
     var userPass = document.getElementById("pass_field").value;
+    var audio = new Audio('/CISC472/bawker/src/assets/login_sound.mp3');
+    audio.play();
+
+    document.getElementById('phub').style.display = "block";
+    document.getElementById('login_btn').style.display = "none";
     //window.alert(userName + " " + userPass);
     firebase.auth().signInWithEmailAndPassword(userName, userPass).catch((error) => {
         var errorCode = error.code;
@@ -43,6 +51,9 @@ function logout() {
     });
 }
 
+/* --- Main Page Functionality --- */
+
+// Countdown tweet message character box
 $(document).ready(function(){
     //Character limit js
     var maxLength = 140;
