@@ -17,6 +17,12 @@ firebase.auth().onAuthStateChanged((user) => {
       //var uid = user.uid;
       document.getElementById("user_div").style.display = "block";
       document.getElementById("login_div").style.display = "none";
+
+      var user = firebase.auth().currentUser;
+      if (user != null) {
+        var user_name = user.email;
+        document.getElementById("user_profile").innerHTML = "Profile: " + user_name;
+      }
     } else {
       // User is signed out
       document.getElementById("user_div").style.display = "none";
@@ -33,6 +39,20 @@ function login() {
         window.alert(errorMessage + " " + errorCode);
     });
 }
+function signup() {
+    var userName = document.getElementById("user_field").value;
+    var userPass = document.getElementById("pass_field").value;
+
+    firebase.auth().createUserWithEmailAndPassword(userName, userPass).then((userCredential) => {
+    // Signed in 
+    //var user = userCredential.user;
+    }).catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        window.alert(errorMessage + " " + errorCode);
+  });
+}
+
 function logout() {
     firebase.auth().signOut().then(function() {
         //signout success
@@ -45,7 +65,7 @@ function logout() {
 
 $(document).ready(function(){
     //Character limit js
-    var maxLength = 140;
+    var maxLength = 145;
     $("textarea").keypress(function(){
        var length = $(this).val().length;
        var length = maxLength - length;

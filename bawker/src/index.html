@@ -24,6 +24,8 @@
             <input type="username" placeholder="username" id="user_field"/>
             <input type="password" placeholder="password" id="pass_field"/>
             <button onclick="login()"> Login </button>
+            <p> - OR - </p>
+            <button onclick="signup()"> Sign up </button>
         </div>
 
         <div id="user_div">
@@ -47,10 +49,10 @@
                         Notifications
                     </li>
                     <li>
-                        Messages
-                    </li>
-                    <li>
                         Settings
+                    </li>
+                    <li id="user_profile">
+                        Profile
                     </li>
                     <li>
                         <button onclick="logout()">Logout</button>
@@ -58,7 +60,7 @@
                 </ul>
             </nav>
             
-            <!--Main Tweet Box-->
+            <!--Main Tweeting Box-->
             <div class="container">
                 <div id="box">
                     <h2> What's on your mind? </h2>
@@ -67,7 +69,7 @@
                         <div class="main-tweet-row">
                             <p>media</p>
                             <p>text edit</p>
-                            <span id='countdown'> 140 </span>
+                            <span id='countdown'> 145 </span>
                             <button class="main-tweet-btn"> BAWK </button>
                         </div>
                     </div>
