@@ -20,6 +20,7 @@
     <body>
         <!-- Log In -->
         <div id="login_div" class="login-div">
+            <img style="width: 50%; height: 50%;" src="/CISC472/bawker/src/assets/bawk.png"/>
             <h3> BAWKER LOGIN</h3>
             <input type="username" placeholder="username" id="user_field"/>
             <input type="password" placeholder="password" id="pass_field"/>
@@ -27,7 +28,7 @@
             <p> - OR - </p>
             <button onclick="signup()"> Sign up </button>
         </div>
-
+        
         <div id="user_div">
             <!--Top Nav-->
             <nav class="navbar justify-content-between">
@@ -65,19 +66,25 @@
                 <div id="box">
                     <h2> What's on your mind? </h2>
                     <div class="bottom-container">
-                        <textarea name="tweet" maxlength="140" placeholder="bawk bawk bawk..."></textarea>
+                        <textarea id="bawker_post" name="tweet" maxlength="145" placeholder="bawk bawk bawk..."></textarea>
                         <div class="main-tweet-row">
                             <p>media</p>
                             <p>text edit</p>
                             <span id='countdown'> 145 </span>
-                            <button class="main-tweet-btn"> BAWK </button>
+                            <button class="main-tweet-btn" onclick="submitBawk()"> BAWK </button>
+                            <br><h4>Your Bawks ... </h4>
                         </div>
                     </div>
                 </div>
+                
             </div>
-            <div id="here"> HERE </div>
+            
             <!--tweets-->
-            <!-- <div id="pop_tweets"></div> -->
+            <div class="tweet-col">
+                <div id="tweet_list">
+                    
+                </div>
+            </div>
         </div>
     </body>
 </html>

@@ -52,7 +52,6 @@ function signup() {
         window.alert(errorMessage + " " + errorCode);
   });
 }
-
 function logout() {
     firebase.auth().signOut().then(function() {
         //signout success
@@ -61,6 +60,31 @@ function logout() {
         var errorMessage = error.message;
         window.alert(errorMessage + " " + errorCode);
     });
+}
+
+let renderTweets = () => {
+  var user = firebase.auth().currentUser;
+  var bawkerPost = document.getElementById("bawker_post").value;
+  document.getElementById("tweet_list").insertAdjacentHTML("beforeend", (`
+      <div class="card mb-3" style="max-width: 540px;">
+      <div class="row g-0">
+          <div class="col-md-4">
+          <img src="/CISC472/bawker/src/assets/bawk.png" class="img-fluid rounded-start" alt="...">
+          </div>
+          <div class="col-md-8">
+          <div class="card-body">
+              <h5 class="card-title">${user.email}</h5>
+              <p class="card-text">${bawkerPost}</p>
+              <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+          </div>
+          </div>
+      </div>
+    </div>
+  `));
+}
+
+function submitBawk() {
+  renderTweets();
 }
 
 $(document).ready(function(){
