@@ -48,6 +48,7 @@ body {
 }
 
 /* -------- MAIN PAGE --------- */
+/* - Top of Page - */
 .title {
     display: flex;
     justify-content: flex-start;
@@ -72,6 +73,8 @@ body {
     background: #ff9b27;
     color: #40260aff; 
 }
+
+/* - side page - */
 .navbar {
     background-color: #40260aff; 
 }
@@ -104,6 +107,8 @@ body {
     background: #ff9b27;
     color: #40260aff; 
 }
+
+/* - middle page tweeting box- */
 .container {
     display: flex;
     justify-content: center;
@@ -151,4 +156,10 @@ textarea {
 .main-tweet-btn:hover {
     background: #ff9b27;
     color: #40260aff;
+}
+
+/* - list of tweets - */
+#here {
+    display: flex;
+    justify-content: center;
 }
