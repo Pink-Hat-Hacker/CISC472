@@ -48,14 +48,6 @@ function logout() {
         window.alert(errorMessage + " " + errorCode);
     });
 }
-
-$(document).querySelectorAll("login_btn").forEach((item) => {
-    item.addEventListener("click", (event) => {
-      const image = event.target.getAttribute("data-src");
-      event.target.setAttribute("src", image);
-    });
-});
-
 /* --- Main Page Functionality --- */
 
 // Countdown tweet message character box
