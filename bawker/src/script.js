@@ -32,15 +32,13 @@ function login() {
     var audio = new Audio('/CISC472/bawker/src/assets/login_sound.mp3');
     audio.play();
 
-    document.getElementById('phub').style.display = "block";
-    document.getElementById('login_btn').style.display = "none";
-    //window.alert(userName + " " + userPass);
     firebase.auth().signInWithEmailAndPassword(userName, userPass).catch((error) => {
         var errorCode = error.code;
         var errorMessage = error.message;
         window.alert(errorMessage + " " + errorCode);
     });
 }
+
 function logout() {
     firebase.auth().signOut().then(function() {
         //signout success
@@ -50,6 +48,13 @@ function logout() {
         window.alert(errorMessage + " " + errorCode);
     });
 }
+
+$(document).querySelectorAll("login_btn").forEach((item) => {
+    item.addEventListener("click", (event) => {
+      const image = event.target.getAttribute("data-src");
+      event.target.setAttribute("src", image);
+    });
+});
 
 /* --- Main Page Functionality --- */
 
