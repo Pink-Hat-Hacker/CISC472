@@ -8,8 +8,20 @@ const firebaseConfig = {
   measurementId: "G-NLXEN0T0EP"
 };
 firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-// //THE KEY AUTH LISTENING FUNCTION IS THIS ONE:
+/**
+ * Firebase authentication functions 
+ * 
+ * login() - logs user in if credentials match firebase db
+ * - throws errors if not a created user
+ * 
+ * signup() - creates new user and sends credentials to firebase db 
+ * - sends error if credentials match already created user
+ * 
+ * logout() - signs out current user
+ *  - error will probably never happen
+ * */ 
 firebase.auth().onAuthStateChanged((user) => {
     if (user) {
       // User is signed in, see docs for a list of available properties
@@ -62,33 +74,44 @@ function logout() {
     });
 }
 
+/**
+ * renderTweets()
+ */
 let renderTweets = () => {
   var user = firebase.auth().currentUser;
+  var timestamp = new Date();
+  timestamp = timestamp.toLocaleString();
   var bawkerPost = document.getElementById("bawker_post").value;
-  document.getElementById("tweet_list").insertAdjacentHTML("beforeend", (`
+  document.getElementById("tweet_list").insertAdjacentHTML("afterbegin", (`
       <div class="card mb-3" style="max-width: 540px;">
       <div class="row g-0">
           <div class="col-md-4">
           <img src="/CISC472/bawker/src/assets/bawk.png" class="img-fluid rounded-start" alt="...">
           </div>
           <div class="col-md-8">
-          <div class="card-body">
-              <h5 class="card-title">${user.email}</h5>
-              <p class="card-text">${bawkerPost}</p>
-              <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-          </div>
+            <div class="card-body">
+                <h5 class="card-title">${user.email}</h5>
+                <p class="card-text">${bawkerPost}</p>
+            </div>
+            <div class="bottom-of-tweet">
+              <button class="like-btn" onclick="submitLike()">👍 </button>
+              <p class="card-text"><small class="text-muted">${timestamp}</small></p>
+            </div>
           </div>
       </div>
     </div>
   `));
 }
 
+
 function submitBawk() {
   renderTweets();
 }
 
+/** Tweet Box
+ * Character limiter
+ */
 $(document).ready(function(){
-    //Character limit js
     var maxLength = 145;
     $("textarea").keypress(function(){
        var length = $(this).val().length;

@@ -158,6 +158,19 @@ textarea {
     color: #40260aff;
 }
 
+/* - tweets them selves - */
+.bottom-of-tweet {
+    display: inline-block;
+    position: absolute;
+}
+.like-btn {
+    background: #40260aff;
+    color: #ff9b27;
+    border: 1px solid #ff9b27;
+    border-radius: 5px;
+    padding: 5px;
+    display: block;
+}
 /* - list of tweets - */
 .tweet-col {
     position: absolute;
