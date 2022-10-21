@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html class="app">
+    <head>
+        <meta charset="utf-8">
+        <!-- Bootstrap -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+        <!-- Style -->
+        <link rel="icon" src="src/assets/bawk.png">
+        <link href="src/style.css" rel="stylesheet">
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Oswald&family=Roboto+Flex:opsz@8..144&display=swap');
+        </style>
+        <!-- Firebase -->
+        <script src="https://www.gstatic.com/firebasejs/9.9.4/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/9.9.4/firebase-database-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/9.9.4/firebase-auth-compat.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+        <!-- 
+            initialize the SDK after all desired features are loaded, set useEmulator to false
+            to avoid connecting the SDK to running emulators.
+        -->
+        <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+        <!-- src -->
+        <script type = "text/javascript" src = "src/script.js"></script>
+    </head>
+    <body>
+        <!-- Log In -->
+        <div id="login_div" class="login-div">
+            <img style="width: 50%; height: 50%;" src="src/assets/bawk.png"/>
+            <h3> BAWKER LOGIN</h3>
+            <input type="username" placeholder="username" id="user_field"/>
+            <input type="password" placeholder="password" id="pass_field"/>
+            <button onclick="login()"> Login </button>
+            <p> - OR - </p>
+            <button onclick="signup()"> Sign up </button>
+        </div>
+        
+        <div id="user_div">
+            <!--Top Nav-->
+            <nav class="navbar justify-content-between">
+                <a class="navbar-brand">
+                    <h1 class="title"> BAWKER </h1>
+                </a>
+                <form class="search-bar">
+                    <input type="search" placeholder="Search">
+                    <button id="search_bar_btn" type="submit">Search</button>
+                </form>
+            </nav>
+            <!--Side Nav-->
+            <nav role="navigation" class="nav-list">
+                <ul>
+                    <li>
+                        Home
+                    </li>
+                    <li>
+                        Notifications
+                    </li>
+                    <li>
+                        Settings
+                    </li>
+                    <li id="user_profile">
+                        Profile
+                    </li>
+                    <li>
+                        <button onclick="logout()">Logout</button>
+                    </li>
+                </ul>
+            </nav>
+            
+            <!--Main Tweeting Box-->
+            <div class="container">
+                <div id="box">
+                    <h2> What's on your mind? </h2>
+                    <div class="bottom-container">
+                        <textarea id="bawker_post" name="tweet" maxlength="145" placeholder="bawk bawk bawk..."></textarea>
+                        <div class="main-tweet-row">
+                            <p>media</p>
+                            <p>text edit</p>
+                            <span id='countdown'> 145 </span>
+                            <button class="main-tweet-btn" onclick="submitBawk()"> BAWK </button>
+                            <br><h4>Your Bawks ... </h4>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <!--tweets-->
+            <div class="tweet-col">
+                <div id="tweet_list">
+                    
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
