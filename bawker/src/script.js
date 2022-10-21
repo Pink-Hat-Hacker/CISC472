@@ -1,15 +1,28 @@
+import { initializeApp } from "../node_modules/firebase/app";
+import {getDatabase, ref} from "../node_modules/firebase/database";
+
 const firebaseConfig = {
   apiKey: "AIzaSyD077VIgWG-33DwRks6uFmMwbgfClPDlEI",
   authDomain: "cisc472-bawker.firebaseapp.com",
   projectId: "cisc472-bawker",
+  databaseURL: "https://cisc472-bawker-default-rtdb.firebaseio.com/",
   storageBucket: "cisc472-bawker.appspot.com",
   messagingSenderId: "859322932460",
   appId: "1:859322932460:web:218c4619be4da4c4cc19c9",
   measurementId: "G-NLXEN0T0EP"
 };
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+const app = initializeApp(firebaseConfig);
 
+function writeUserData(userId, name, email, imageUrl){
+  const db = getDatabase(app);
+  const reference = ref(db, 'users/' + userId);
+  set(reference , {
+    username: name,
+    email: email,
+    profile_picture: imageUrl 
+  });
+}
+writeUserData("zoe", "zval", "zyv@udel.edu", "https://www.cabq.gov/artsculture/biopark/news/10-cool-facts-about-penguins/@@images/1a36b305-412d-405e-a38b-0947ce6709ba.jpeg");
 /**
  * Firebase authentication functions 
  * 
