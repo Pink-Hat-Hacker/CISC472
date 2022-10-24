@@ -23,25 +23,6 @@ var db = firebase.database();
  * logout() - signs out current user
  *  - error will probably never happen
  * */ 
-firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-      // User is signed in, see docs for a list of available properties
-      // https://firebase.google.com/docs/reference/js/firebase.User
-      //var uid = user.uid;
-      document.getElementById("user_div").style.display = "block";
-      document.getElementById("login_div").style.display = "none";
-
-      var user = firebase.auth().currentUser;
-      if (user != null) {
-        var user_name = user.email;
-        document.getElementById("user_profile").innerHTML = "Profile: " + user_name;
-      }
-    } else {
-      // User is signed out
-      document.getElementById("user_div").style.display = "none";
-      document.getElementById("login_div").style.display = "block";
-    }
-});
 function login() {
     var userName = document.getElementById("user_field").value;
     var userPass = document.getElementById("pass_field").value;
@@ -77,80 +58,29 @@ function logout() {
 }
 
 /**
- * writeUserData
- * @param {string} userId 
- * @param {string} name 
- * @param {string} email 
- */
-function writeUserData(userId, name, email) {
-  console.log("in here");
-  firebase.database().ref('users/' + userId).set({
-    username: name,
-    email: email,
-  });
-}
-
-/**
- * renderTweets()
- * makes new tweet and puts it in the #tweet-col
- * called when submitBawk is called
- */
-let renderTweets = (tObj) => {
-  firebase.database().ref('users/' + tObj.author.nickname + '/bawks/').set(tObj);
-  $("#tweet_list").prepend(`
-      <div class="card mb-3" style="max-width: 540px;">
-      <div class="row g-0">
-          <div class="col-md-4">
-          <img src="src/assets/bawk.png" class="img-fluid rounded-start" alt="...">
-          </div>
-          <div class="col-md-8">
-            <div class="card-body">
-                <h5 class="card-title">${tObj.authorId}</h5>
-                <p class="card-text">${tObj.content}</p>
-            </div>
-            <div class="bottom-of-tweet">
-              <button class="like-btn" onclick="submitLike()">👍 ${tObj.likes}</button>
-              <p class="card-text"><small class="text-muted">${tObj.timestamp}</small></p>
-            </div>
-          </div>
-      </div>
-    </div>
-  `);
-}
-
-/**
  * submitBawk()
  * takes in form information
  * sends to render tweet
  */
 function submitBawk() {
-  var user = (firebase.auth().currentUser).email;
-  var userName = user.substring(0, user.indexOf('@'));
+  const user = firebase.auth().currentUser;
+  var myRef = firebase.database().ref().child("/bawks").push();
+  var tweetID = myRef.key;
   var timestamp = new Date();
   timestamp = timestamp.toLocaleString();
   var bawkerPost = document.getElementById("bawker_post").value;
-  var numLikes = 0;
-
-  let tweetJSON = {
-    "authorId": user,
-    "content": bawkerPost,
-    "likes": numLikes,
-    "timestamp": timestamp,
+  const myObj = {
+    "content": bawkerPost, 
+    "likes": 0, 
+    "timestamp": timestamp, 
+    "authorID": user.uid,
     "author": {
-      "nickname": userName,
-      "pic": ""
-    },
+      "nickname": user.email
+    }
   };
-  //renderBawkingCol(tweetJSON);
-  renderTweets(tweetJSON);
+  updateUser(user, tweetID);
+  myRef.set(myObj);
 }
-
-// function renderBawkingCol(tObj) {
-//   firebase.database.child('users/' + tObj.author.nickname + '/bawks/', (ss) => {
-//     let sObj = ss.val();
-//     renderTweets(sObj, ss.key);
-//   });
-// }
 
 
 /** Tweet Box
@@ -164,3 +94,150 @@ $(document).ready(function(){
        $("#countdown").text(length);
     })
 });
+
+
+/** NEW SHIT */
+let updateUser = (user, tweetID)=>{;
+  var userRef = firebase.database().ref().child("/users").child(user.uid);
+  userRef.get().then((ss) => {
+    let userData = ss.val();
+    if(!userData){
+      const newUser = {
+        handle: user.displayName,
+        pic: user.photoURL,
+        tweets:{
+          [tweetID] : true,
+        } 
+        };
+      userRef.set(newUser);
+    } 
+    else{
+      const newUserTweet = {
+          [tweetID] : true,
+      } 
+      userRef.child("/bawks/").update(newUserTweet);
+    }
+  }); 
+}
+
+let renderTweet = (tObj, uuid)=>{
+  $("#tweet_list").prepend(`
+<div class="card mb-3 tweet" data-uuid="${uuid}" style="max-width: 540px;">
+  <div class="row g-0">
+    <div class="col-md-4">
+      <img src="src/assets/bawk.png" class="img-fluid rounded-start" alt="...">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">${tObj.author.nickname}</h5>
+        <p class="card-text">${tObj.content}</p>
+        <p class="card-text like-button" data-tweetid="${uuid}">${tObj.likes} Like</p>
+        <p class="card-text"><small class="text-muted">Tweeted at ${new Date(tObj.timestamp).toLocaleString()}</small></p>
+      </div>
+    </div>
+  </div>
+</div>
+  `);
+  firebase.database().ref("/number_likes").child(uuid).child("likes").on("value", ss=>{
+    $(`.like-button[data-tweetid=${uuid}]`).html(`${ss.val() || 0} Likes`);
+  });
+}
+
+
+let renderLogin = () => {
+  $("body").html(`
+    <div class="login-div">
+    <img style="width: 50%; height: 50%;" src="src/assets/bawk.png"/>
+    <h3> BAWKER LOGIN</h3>
+    <input type="username" placeholder="username" id="user_field"/>
+    <input type="password" placeholder="password" id="pass_field"/>
+    <button onclick="login()"> Login </button>
+    <p> - OR - </p>
+    <button onclick="signup()"> Sign up </button>
+    </div>
+  `);
+}
+
+let renderPage = (loggedIn, user_email)=>{
+  let myuid = loggedIn.uid;
+  $("body").html(`
+    <div id="user_div">
+      <!--Top Nav-->
+      <nav class="navbar justify-content-between">
+          <a class="navbar-brand">
+              <h1 class="title"> BAWKER </h1>
+          </a>
+          <form class="search-bar">
+              <input type="search" placeholder="Search">
+              <button id="search_bar_btn" type="submit">Search</button>
+          </form>
+      </nav>
+      <!--Side Nav-->
+      <nav role="navigation" class="nav-list">
+          <ul>
+              <li>
+                  Home
+              </li>
+              <li>
+                  Notifications
+              </li>
+              <li>
+                  Settings
+              </li>
+              <li id="user_profile">
+                  Profile: ${user_email}
+              </li>
+              <li>
+                  <button onclick="logout()">Logout</button>
+              </li>
+          </ul>
+      </nav>
+      
+      <!--Main Tweeting Box-->
+      <div class="container">
+          <div id="box">
+              <h2> What's on your mind? </h2>
+              <div class="bottom-container">
+                  <textarea id="bawker_post" name="tweet" maxlength="145" placeholder="bawk bawk bawk..."></textarea>
+                  <div class="main-tweet-row">
+                      <p>media</p>
+                      <p>text edit</p>
+                      <span id='countdown'> 145 </span>
+                      <button class="main-tweet-btn" onclick="submitBawk()"> BAWK </button>
+                      <br><h4>All Bawks ...</h4>
+                  </div>
+              </div>
+          </div>
+          
+      </div>
+      
+      <!--tweets-->
+      <div class="tweet-col">
+          <div id="tweet_list">
+              
+          </div>
+      </div>
+    </div>
+  `);
+  let tweetRef = firebase.database().ref("/bawks");
+  tweetRef.on("child_added", (ss)=>{
+    let tObj = ss.val();
+    renderTweet(tObj, ss.key);
+    $(".like-button").off("click");
+    $(".like-button").on("click", (evt)=>{
+      let clickedTweet = $(evt.currentTarget).attr("data-tweetid");
+      let likesRef = firebase.database().ref("/number_likes").child(clickedTweet);
+      toggleLike(likesRef, myuid);
+    });
+  });
+};
+
+firebase.auth().onAuthStateChanged(user => {
+  if (!user){
+    renderLogin();
+  } else {
+   //$("#login_div").html(`<button onclick="logout()">Logout</button>`);
+    var user_email = firebase.auth().currentUser;
+    renderPage(user, user_email.email);
+  }
+})
