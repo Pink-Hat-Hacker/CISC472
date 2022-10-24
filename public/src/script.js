@@ -75,7 +75,8 @@ function submitBawk() {
     "timestamp": timestamp, 
     "authorID": user.uid,
     "author": {
-      "nickname": user.email
+      "nickname": user.email,
+      "profilePic": "https://drive.google.com/file/d/1lEx0xGwbcOpsn0lu4yKPTqOnArHo_g61/view?usp=sharing"
     }
   };
   updateUser(user, tweetID);
@@ -97,25 +98,35 @@ $(document).ready(function(){
 
 
 /** NEW SHIT */
-let updateUser = (user, tweetID)=>{;
+// function settings(user) {
+//   var x = document.getElementById("bawk_pic");
+//   if (x.style.display === "none") {
+//     x.style.display = "block";
+//   } else {
+//     x.style.display = "none";
+//   }
+//   var userRef = firebase.database().ref().child("/users").child(user.uid);
+//   var user_pic = document.getElementById("bawker_pic").value;
+
+// }
+let updateUser = (user, tweet_id)=>{;
   var userRef = firebase.database().ref().child("/users").child(user.uid);
   userRef.get().then((ss) => {
-    let userData = ss.val();
-    if(!userData){
-      const newUser = {
+    let user_data = ss.val();
+    if(!user_data){
+      const new_data = {
         handle: user.displayName,
-        pic: user.photoURL,
-        tweets:{
-          [tweetID] : true,
+        bawk:{
+          [tweet_id] : true,
         } 
-        };
-      userRef.set(newUser);
+      };
+      userRef.set(new_data);
     } 
     else{
-      const newUserTweet = {
-          [tweetID] : true,
+      const new_tweet = {
+          [tweet_id] : true,
       } 
-      userRef.child("/bawks/").update(newUserTweet);
+      userRef.child("/bawks/").update(new_tweet);
     }
   }); 
 }
@@ -125,14 +136,14 @@ let renderTweet = (tObj, uuid)=>{
 <div class="card mb-3 tweet" data-uuid="${uuid}" style="max-width: 540px;">
   <div class="row g-0">
     <div class="col-md-4">
-      <img src="src/assets/bawk.png" class="img-fluid rounded-start" alt="...">
+      <img src="${tObj.author.profilePic}" class="img-fluid rounded-start" alt="...">
     </div>
     <div class="col-md-8">
       <div class="card-body">
         <h5 class="card-title">${tObj.author.nickname}</h5>
         <p class="card-text">${tObj.content}</p>
-        <p class="card-text like-button" data-tweetid="${uuid}">${tObj.likes} Like</p>
-        <p class="card-text"><small class="text-muted">Tweeted at ${new Date(tObj.timestamp).toLocaleString()}</small></p>
+        <button class="like-btn" onclick="submitLike()" data-tweetid="${uuid}">👍 ${tObj.likes}</button>
+        <p class="card-text"><small class="text-muted">Tweeted at ${tObj.timestamp}</small></p>
       </div>
     </div>
   </div>
@@ -142,8 +153,6 @@ let renderTweet = (tObj, uuid)=>{
     $(`.like-button[data-tweetid=${uuid}]`).html(`${ss.val() || 0} Likes`);
   });
 }
-
-
 let renderLogin = () => {
   $("body").html(`
     <div class="login-div">
@@ -157,7 +166,6 @@ let renderLogin = () => {
     </div>
   `);
 }
-
 let renderPage = (loggedIn, user_email)=>{
   let myuid = loggedIn.uid;
   $("body").html(`
@@ -181,8 +189,9 @@ let renderPage = (loggedIn, user_email)=>{
               <li>
                   Notifications
               </li>
-              <li>
-                  Settings
+              <li id="settings">
+                  <button onclick="settings(${myuid})">Settings</button>
+                  <input type="file" class="form-control" name="bawk_pic" id="bawk_pic" style="display: none;">
               </li>
               <li id="user_profile">
                   Profile: ${user_email}
