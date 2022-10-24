@@ -92,22 +92,11 @@ function writeUserData(userId, name, email) {
 
 /**
  * renderTweets()
+ * makes new tweet and puts it in the #tweet-col
  * called when submitBawk is called
  */
-let renderTweets = () => {
-  var user = (firebase.auth().currentUser).email;
-  var userName = user.substring(0, user.indexOf('@'));
-  var timestamp = new Date();
-  timestamp = timestamp.toLocaleString();
-  var bawkerPost = document.getElementById("bawker_post").value;
-  var numLikes = 0;
-  firebase.database().ref('users/' + userName + '/bawks/').set({
-    username: userName,
-    post_text: bawkerPost,
-    timestamp: timestamp,
-    number_likes: numLikes
-  });
-
+let renderTweets = (tObj) => {
+  firebase.database().ref('users/' + tObj.author.nickname + '/bawks/').set(tObj);
   $("#tweet_list").prepend(`
       <div class="card mb-3" style="max-width: 540px;">
       <div class="row g-0">
@@ -116,12 +105,12 @@ let renderTweets = () => {
           </div>
           <div class="col-md-8">
             <div class="card-body">
-                <h5 class="card-title">${userName}</h5>
-                <p class="card-text">${bawkerPost}</p>
+                <h5 class="card-title">${tObj.authorId}</h5>
+                <p class="card-text">${tObj.content}</p>
             </div>
             <div class="bottom-of-tweet">
-              <button class="like-btn" onclick="submitLike()">👍 ${numLikes}</button>
-              <p class="card-text"><small class="text-muted">${timestamp}</small></p>
+              <button class="like-btn" onclick="submitLike()">👍 ${tObj.likes}</button>
+              <p class="card-text"><small class="text-muted">${tObj.timestamp}</small></p>
             </div>
           </div>
       </div>
@@ -130,9 +119,28 @@ let renderTweets = () => {
 }
 
 
+
 function submitBawk() {
-  renderTweets();
+  var user = (firebase.auth().currentUser).email;
+  var userName = user.substring(0, user.indexOf('@'));
+  var timestamp = new Date();
+  timestamp = timestamp.toLocaleString();
+  var bawkerPost = document.getElementById("bawker_post").value;
+  var numLikes = 0;
+
+  let tweetJSON = {
+    "authorId": user,
+    "content": bawkerPost,
+    "likes": numLikes,
+    "timestamp": timestamp,
+    "author": {
+      "nickname": userName,
+      "pic": ""
+    },
+  };
+  renderTweets(tweetJSON);
 }
+
 
 /** Tweet Box
  * Character limiter
