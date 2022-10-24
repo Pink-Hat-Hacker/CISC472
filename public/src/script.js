@@ -8,7 +8,8 @@ const firebaseConfig = {
   appId: "1:859322932460:web:218c4619be4da4c4cc19c9",
   measurementId: "G-NLXEN0T0EP"
 };
-firebase.initializeApp(firebaseConfig);
+const app = firebase.initializeApp(firebaseConfig);
+var db = firebase.database();
 
 /**
  * Firebase authentication functions 
@@ -54,15 +55,16 @@ function login() {
 function signup() {
     var userName = document.getElementById("user_field").value;
     var userPass = document.getElementById("pass_field").value;
-
     firebase.auth().createUserWithEmailAndPassword(userName, userPass).then((userCredential) => {
     // Signed in 
-    //var user = userCredential.user;
+    const user = userCredential.user;
+    console.log(user);
     }).catch((error) => {
         var errorCode = error.code;
         var errorMessage = error.message;
         window.alert(errorMessage + " " + errorCode);
   });
+  writeUserData(userName.substring(0, userName.indexOf('@')), userName.substring(0, userName.indexOf('@')), userName);
 }
 function logout() {
   firebase.auth().signOut().then(function() {
@@ -75,14 +77,38 @@ function logout() {
 }
 
 /**
+ * writeUserData
+ * @param {string} userId 
+ * @param {string} name 
+ * @param {string} email 
+ */
+function writeUserData(userId, name, email) {
+  console.log("in here");
+  firebase.database().ref('users/' + userId).set({
+    username: name,
+    email: email,
+  });
+}
+
+/**
  * renderTweets()
+ * called when submitBawk is called
  */
 let renderTweets = () => {
-  var user = firebase.auth().currentUser;
+  var user = (firebase.auth().currentUser).email;
+  var userName = user.substring(0, user.indexOf('@'));
   var timestamp = new Date();
   timestamp = timestamp.toLocaleString();
   var bawkerPost = document.getElementById("bawker_post").value;
-  document.getElementById("tweet_list").insertAdjacentHTML("afterbegin", (`
+  var numLikes = 0;
+  firebase.database().ref('users/' + userName + '/bawks/').set({
+    username: userName,
+    post_text: bawkerPost,
+    timestamp: timestamp,
+    number_likes: numLikes
+  });
+
+  $("#tweet_list").prepend(`
       <div class="card mb-3" style="max-width: 540px;">
       <div class="row g-0">
           <div class="col-md-4">
@@ -90,17 +116,17 @@ let renderTweets = () => {
           </div>
           <div class="col-md-8">
             <div class="card-body">
-                <h5 class="card-title">${user.email}</h5>
+                <h5 class="card-title">${userName}</h5>
                 <p class="card-text">${bawkerPost}</p>
             </div>
             <div class="bottom-of-tweet">
-              <button class="like-btn" onclick="submitLike()">👍 </button>
+              <button class="like-btn" onclick="submitLike()">👍 ${numLikes}</button>
               <p class="card-text"><small class="text-muted">${timestamp}</small></p>
             </div>
           </div>
       </div>
     </div>
-  `));
+  `);
 }
 
 
