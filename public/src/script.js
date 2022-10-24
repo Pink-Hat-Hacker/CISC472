@@ -118,8 +118,11 @@ let renderTweets = (tObj) => {
   `);
 }
 
-
-
+/**
+ * submitBawk()
+ * takes in form information
+ * sends to render tweet
+ */
 function submitBawk() {
   var user = (firebase.auth().currentUser).email;
   var userName = user.substring(0, user.indexOf('@'));
@@ -138,8 +141,16 @@ function submitBawk() {
       "pic": ""
     },
   };
+  //renderBawkingCol(tweetJSON);
   renderTweets(tweetJSON);
 }
+
+// function renderBawkingCol(tObj) {
+//   firebase.database.child('users/' + tObj.author.nickname + '/bawks/', (ss) => {
+//     let sObj = ss.val();
+//     renderTweets(sObj, ss.key);
+//   });
+// }
 
 
 /** Tweet Box
