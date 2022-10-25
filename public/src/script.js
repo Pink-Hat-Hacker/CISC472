@@ -76,7 +76,7 @@ function submitBawk() {
     "authorID": user.uid,
     "author": {
       "nickname": user.email,
-      "profilePic": "https://drive.google.com/file/d/1lEx0xGwbcOpsn0lu4yKPTqOnArHo_g61/view?usp=sharing"
+      "profilePic": "src/assets/bawk.png"
     }
   };
   updateUser(user, tweetID);
@@ -98,17 +98,14 @@ $(document).ready(function(){
 
 
 /** NEW SHIT */
-// function settings(user) {
-//   var x = document.getElementById("bawk_pic");
-//   if (x.style.display === "none") {
-//     x.style.display = "block";
-//   } else {
-//     x.style.display = "none";
-//   }
-//   var userRef = firebase.database().ref().child("/users").child(user.uid);
-//   var user_pic = document.getElementById("bawker_pic").value;
-
-// }
+function settings() {
+  var x = document.getElementById("bawk_pic");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
 let updateUser = (user, tweet_id)=>{;
   var userRef = firebase.database().ref().child("/users").child(user.uid);
   userRef.get().then((ss) => {
@@ -190,7 +187,7 @@ let renderPage = (loggedIn, user_email)=>{
                   Notifications
               </li>
               <li id="settings">
-                  <button onclick="settings(${myuid})">Settings</button>
+                  <button onclick="settings()">Settings</button>
                   <input type="file" class="form-control" name="bawk_pic" id="bawk_pic" style="display: none;">
               </li>
               <li id="user_profile">
