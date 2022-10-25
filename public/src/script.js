@@ -99,20 +99,31 @@ $(document).ready(function(){
 
 /** NEW SHIT */
 function settings() {
-  var x = document.getElementById("bawk_pic");
-  if (x.style.display === "none") {
+  var x = document.getElementById("prof_pic");
+  var y = document.getElementById("setting_update");
+  if (x.style.display === "none" && y.style.display === "none") {
     x.style.display = "block";
+    y.style.display = "block";
   } else {
     x.style.display = "none";
+    y.style.display = "none";
   }
 }
+
+function updateProfImg(user) {
+  console.log(user);
+  console.log(user.uid);
+  var userRef = firebase.database().ref().child("/bawks").child(user.uid);
+  userRef.child("/profilePic/").set($("#prof_pic").val());
+}
+
 let updateUser = (user, tweet_id)=>{;
   var userRef = firebase.database().ref().child("/users").child(user.uid);
   userRef.get().then((ss) => {
     let user_data = ss.val();
     if(!user_data){
       const new_data = {
-        handle: user.displayName,
+        handle: user.author.nickname,
         bawk:{
           [tweet_id] : true,
         } 
@@ -187,8 +198,9 @@ let renderPage = (loggedIn, user_email)=>{
                   Notifications
               </li>
               <li id="settings">
-                  <button onclick="settings()">Settings</button>
-                  <input type="file" class="form-control" name="bawk_pic" id="bawk_pic" style="display: none;">
+                  <button id="prof_img_btn" onclick="settings()" style="width: 160px;">Profile Photo Upload</button>
+                  <input name="prof_pic" id="prof_pic" placeholder="Image Link Here" style="display: none; width: 250px;"/>
+                  <button id="setting_update" style="display: none; width: 250px;" onclick="updateProfImg(${myuid})">Update</button>
               </li>
               <li id="user_profile">
                   Profile: ${user_email}
