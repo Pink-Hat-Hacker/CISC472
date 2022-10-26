@@ -14,6 +14,11 @@ var db = firebase.database();
 /**
  * Firebase authentication functions 
  * 
+ * writeUserData(userId, name, email)
+ * @param {*} userId 
+ * @param {*} name 
+ * @param {*} email 
+ * 
  * login() - logs user in if credentials match firebase db
  * - throws errors if not a created user
  * 
@@ -23,6 +28,13 @@ var db = firebase.database();
  * logout() - signs out current user
  *  - error will probably never happen
  * */ 
+
+function writeUserData(userId, email) {
+  firebase.database().ref('users/' + user).set({
+    username: userId,
+    email: email,
+  });
+}
 function login() {
     var userName = document.getElementById("user_field").value;
     var userPass = document.getElementById("pass_field").value;
@@ -32,6 +44,7 @@ function login() {
         var errorMessage = error.message;
         window.alert(errorMessage + " " + errorCode);
     });
+    writeUserData(userName.substring(0, userName.indexOf('@')), userName);
 }
 function signup() {
     var userName = document.getElementById("user_field").value;
@@ -45,7 +58,7 @@ function signup() {
         var errorMessage = error.message;
         window.alert(errorMessage + " " + errorCode);
   });
-  writeUserData(userName.substring(0, userName.indexOf('@')), userName.substring(0, userName.indexOf('@')), userName);
+  writeUserData(userName.substring(0, userName.indexOf('@')), userName);
 }
 function logout() {
   firebase.auth().signOut().then(function() {
@@ -83,21 +96,19 @@ function submitBawk() {
   myRef.set(myObj);
 }
 
+/** NEW SHIT */
 
 /** Tweet Box
  * Character limiter
  */
-$(document).ready(function(){
-    var maxLength = 145;
-    $("textarea").keypress(function(){
-       var length = $(this).val().length;
-       var length = maxLength - length;
-       $("#countdown").text(length);
-    })
+ $(document).ready(function(){
+  var maxLength = 145;
+  $("textarea").keypress(function(){
+     var length = $(this).val().length;
+     var length = maxLength - length;
+     $("#countdown").text(length);
+  })
 });
-
-
-/** NEW SHIT */
 function settings() {
   var x = document.getElementById("prof_pic");
   var y = document.getElementById("setting_update");
