@@ -115,12 +115,30 @@ function updateProfImg() {
   userRef.child("profilePic").set($("#prof_pic").val());
 }
 
+let toggleLike = (tweetRef, uid)=>{
+  tweetRef.transaction((tObj) => {
+    if (!tObj) {
+      tObj = {likes: 0};
+    }
+    if (tObj.likes && tObj.likes_by_user[uid]) {
+      tObj.likes--;
+      tObj.likes_by_user[uid] = null;
+    } else {
+      tObj.likes++;
+      if (!tObj.likes_by_user) {
+        tObj.likes_by_user = {};
+      }
+      tObj.likes_by_user[uid] = true;
+    }
+    return tObj;
+  });
+}
+
+let renderedTweetLikeLookup = {};
 /**
  * renderTweet - put HTML onto page with user data
  * @param {JSON of Tweet/User info} tObj 
  * @param {Unique ID of Tweet} uuid 
- * 
- * FIGURE OUT HOW PHOTOURL WORKS
  */
 let renderTweet = (tObj, uuid)=>{
   var user = firebase.auth().currentUser;
@@ -145,7 +163,7 @@ let renderTweet = (tObj, uuid)=>{
           <div class="card-body">
             <h5 class="card-title">${tObj.author.nickname}</h5>
             <p class="card-text">${tObj.content}</p>
-            <button class="like-btn" onclick="submitLike()" data-tweetid="${uuid}">👍 ${tObj.likes}</button>
+            <button class="like-btn" data-tweetid="${uuid}" onlclick="console.log("getting here")">${tObj.likes}</button>
             <p class="card-text"><small class="text-muted">Tweeted at ${tObj.timestamp}</small></p>
           </div>
         </div>
@@ -153,8 +171,8 @@ let renderTweet = (tObj, uuid)=>{
     </div>
   `);
   });
-  firebase.database().ref("/number_likes").child(uuid).child("likes").on("value", ss=>{
-    $(`.like-button[data-tweetid=${uuid}]`).html(`${ss.val() || 0} Likes`);
+  firebase.database().ref("/likes").child(uuid).child("likes").on("value", ss=>{
+    $(`.like-btn[data-tweetid=${uuid}]`).html(`👍 ${ss.val() || 0} Likes`);
   });
 }
 /**
@@ -243,15 +261,15 @@ let renderPage = (loggedIn, user_email)=>{
     </div>
   `);
   //here we can do your bawks or all bawks switch
-  let tweetRef = firebase.database().ref("/users/" + myuid + "/bawks/");
+  let tweetRef = firebase.database().ref("users/" + myuid + "/bawks/");
   tweetRef.on("child_added", (ss)=>{
     let tObj = ss.val();
     renderTweet(tObj, ss.key);
-    $(".like-button").off("click");
-    $(".like-button").on("click", (evt)=>{
+    $(".like-btn").off("click");
+    $(".like-btn").on("click", (evt)=>{
       let clickedTweet = $(evt.currentTarget).attr("data-tweetid");
-      let likesRef = firebase.database().ref("/number_likes").child(clickedTweet);
-      toggleLike(likesRef, myuid);
+      let mylikesRef = firebase.database().ref("/likes").child(clickedTweet);
+      toggleLike(mylikesRef, myuid);
     });
   });
 };
