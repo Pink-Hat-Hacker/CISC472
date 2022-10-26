@@ -29,8 +29,8 @@ var db = firebase.database();
  *  - error will probably never happen
  * */ 
 
-function writeUserData(userId, email) {
-  firebase.database().ref('users/' + user).set({
+function writeUserData(uuid, userId, email) {
+  firebase.database().ref('users/' + uuid).set({
     username: userId,
     email: email,
   });
@@ -44,7 +44,6 @@ function login() {
         var errorMessage = error.message;
         window.alert(errorMessage + " " + errorCode);
     });
-    writeUserData(userName.substring(0, userName.indexOf('@')), userName);
 }
 function signup() {
     var userName = document.getElementById("user_field").value;
@@ -52,13 +51,13 @@ function signup() {
     firebase.auth().createUserWithEmailAndPassword(userName, userPass).then((userCredential) => {
     // Signed in 
     const user = userCredential.user;
-    console.log(user);
+    writeUserData(user.uid, userName.substring(0, userName.indexOf('@')), userName);
     }).catch((error) => {
         var errorCode = error.code;
         var errorMessage = error.message;
         window.alert(errorMessage + " " + errorCode);
   });
-  writeUserData(userName.substring(0, userName.indexOf('@')), userName);
+ 
 }
 function logout() {
   firebase.auth().signOut().then(function() {
@@ -76,9 +75,9 @@ function logout() {
  * sends to render tweet
  */
 function submitBawk() {
-  const user = firebase.auth().currentUser;
-  var myRef = firebase.database().ref().child("/bawks").push();
-  var tweetID = myRef.key;
+  var user = firebase.auth().currentUser;
+  var myRef = firebase.database().ref().child("/users/" + user.uid + "/bawks/").push();
+  
   var timestamp = new Date();
   timestamp = timestamp.toLocaleString();
   var bawkerPost = document.getElementById("bawker_post").value;
@@ -88,11 +87,13 @@ function submitBawk() {
     "timestamp": timestamp, 
     "authorID": user.uid,
     "author": {
-      "nickname": user.email,
+      "email": user.email,
+      "nickname": user.email.substring(0, user.email.indexOf('@')),
       "profilePic": "src/assets/bawk.png"
     }
   };
-  updateUser(user, tweetID);
+  //updateUser(user, tweetID);
+  //renderTweet(myObj, user.uid);
   myRef.set(myObj);
 }
 
@@ -101,7 +102,7 @@ function submitBawk() {
 /** Tweet Box
  * Character limiter
  */
- $(document).ready(function(){
+$(document).ready(function(){
   var maxLength = 145;
   $("textarea").keypress(function(){
      var length = $(this).val().length;
@@ -128,27 +129,27 @@ function updateProfImg(user) {
   userRef.child("/profilePic/").set($("#prof_pic").val());
 }
 
-let updateUser = (user, tweet_id)=>{;
-  var userRef = firebase.database().ref().child("/users").child(user.uid);
-  userRef.get().then((ss) => {
-    let user_data = ss.val();
-    if(!user_data){
-      const new_data = {
-        handle: user.author.nickname,
-        bawk:{
-          [tweet_id] : true,
-        } 
-      };
-      userRef.set(new_data);
-    } 
-    else{
-      const new_tweet = {
-          [tweet_id] : true,
-      } 
-      userRef.child("/bawks/").update(new_tweet);
-    }
-  }); 
-}
+// let updateUser = (user, tweet_id)=>{;
+//   var userRef = firebase.database().ref().child("/users").child(user.uid);
+//   userRef.get().then((ss) => {
+//     // let user_data = ss.val();
+//     // if(!user_data){
+//     //   const new_data = {
+//     //     email: user.author.email,
+//     //     bawk:{
+//     //       [tweet_id] : true,
+//     //     } 
+//     //   };
+//     //   userRef.set(new_data);
+//     // } 
+//     // else{
+//     //   const new_tweet = {
+//     //       [tweet_id] : true,
+//     //   } 
+//     //   userRef.child(user.authorID + "/bawks/").update(new_tweet);
+//     // }
+//   }); 
+// }
 
 let renderTweet = (tObj, uuid)=>{
   $("#tweet_list").prepend(`
@@ -187,6 +188,7 @@ let renderLogin = () => {
 }
 let renderPage = (loggedIn, user_email)=>{
   let myuid = loggedIn.uid;
+  //writeUserData(myuid, user_email.substring(0, user_email.indexOf('@')), user_email);
   $("body").html(`
     <div id="user_div">
       <!--Top Nav-->
@@ -248,7 +250,7 @@ let renderPage = (loggedIn, user_email)=>{
       </div>
     </div>
   `);
-  let tweetRef = firebase.database().ref("/bawks");
+  let tweetRef = firebase.database().ref("/users/" + myuid + "/bawks/");
   tweetRef.on("child_added", (ss)=>{
     let tObj = ss.val();
     renderTweet(tObj, ss.key);
