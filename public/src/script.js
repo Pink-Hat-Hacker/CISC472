@@ -113,8 +113,10 @@ function updateProfImg() {
   var user = firebase.auth().currentUser;
   var userRef = firebase.database().ref().child("/users/" + user.uid);
   userRef.child("profilePic").set($("#prof_pic").val());
+  location.reload();
 }
 
+/** Tweet Likes */
 let toggleLike = (tweetRef, uid)=>{
   tweetRef.transaction((tObj) => {
     if (!tObj) {
@@ -133,7 +135,6 @@ let toggleLike = (tweetRef, uid)=>{
     return tObj;
   });
 }
-
 let renderedTweetLikeLookup = {};
 /**
  * renderTweet - put HTML onto page with user data
@@ -141,10 +142,11 @@ let renderedTweetLikeLookup = {};
  * @param {Unique ID of Tweet} uuid 
  */
 let renderTweet = (tObj, uuid)=>{
-  var user = firebase.auth().currentUser;
+  //var user = firebase.auth().currentUser;
+  var userEmail = tObj.authorID;
   /** - Profile Picture - */
   var profPic = "src/assets/bawk.png";
-  var myRef = firebase.database().ref().child("/users").child(user.uid);
+  var myRef = firebase.database().ref().child("/users").child(userEmail);
   myRef.get().then((ss) => {
     let userData = ss.val();
     if(!userData){
@@ -261,7 +263,7 @@ let renderPage = (loggedIn, user_email)=>{
     </div>
   `);
   //here we can do your bawks or all bawks switch
-  let tweetRef = firebase.database().ref("users/" + myuid + "/bawks/");
+  let tweetRef = firebase.database().ref("/bawks/");
   tweetRef.on("child_added", (ss)=>{
     let tObj = ss.val();
     renderTweet(tObj, ss.key);
