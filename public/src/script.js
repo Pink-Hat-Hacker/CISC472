@@ -77,7 +77,7 @@ function logout() {
 function submitBawk() {
   var user = firebase.auth().currentUser;
   var myRef = firebase.database().ref().child("/users/" + user.uid + "/bawks/").push();
-  
+  var bawkRef = firebase.database().ref("bawks/").push();
   var timestamp = new Date();
   timestamp = timestamp.toLocaleString();
   var bawkerPost = document.getElementById("bawker_post").value;
@@ -91,6 +91,7 @@ function submitBawk() {
       "nickname": user.email.substring(0, user.email.indexOf('@'))
     }
   };
+  bawkRef.set(myObj);
   myRef.set(myObj);
 }
 
@@ -108,9 +109,10 @@ function settings() {
     y.style.display = "none";
   }
 }
-function updateProfImg(user) {
-  var userRef = firebase.database().ref().child("/users/" + user.uid + "/bawks/").child(user.uid);
-  userRef.child("/profilePic/").set($("#prof_pic").val());
+function updateProfImg() {
+  var user = firebase.auth().currentUser;
+  var userRef = firebase.database().ref().child("/users/" + user.uid);
+  userRef.child("profilePic").set($("#prof_pic").val());
 }
 
 /**
@@ -122,32 +124,35 @@ function updateProfImg(user) {
  */
 let renderTweet = (tObj, uuid)=>{
   var user = firebase.auth().currentUser;
-  var ref = firebase.database().ref('users/' + user.pro + "/profilePic/");
-  var profPic = "";
-  ref.on('value', (snapshot) => {
-    console.log(snapshot.val());
-    profPic = snapshot.val();
-  }, (errorObject) => {
-    console.log('The read failed: ' + errorObject.name);
-  });
-  console.log(user);
+  /** - Profile Picture - */
+  var profPic = "src/assets/bawk.png";
+  var myRef = firebase.database().ref().child("/users").child(user.uid);
+  myRef.get().then((ss) => {
+    let userData = ss.val();
+    if(!userData){
+      //console.log("null");
+    }else{
+      profPic = userData.profilePic;
+      $("#user_img-"+uuid).html(`<img src="${profPic}" class="img-fluid rounded-start" alt="...">`);
+    }
   $("#tweet_list").prepend(`
-<div class="card mb-3 tweet" data-uuid="${uuid}" style="max-width: 540px;">
-  <div class="row g-0">
-    <div class="col-md-4">
-      <img src="${user.profilePic}" class="img-fluid rounded-start" alt="...">
-    </div>
-    <div class="col-md-8">
-      <div class="card-body">
-        <h5 class="card-title">${tObj.author.nickname}</h5>
-        <p class="card-text">${tObj.content}</p>
-        <button class="like-btn" onclick="submitLike()" data-tweetid="${uuid}">👍 ${tObj.likes}</button>
-        <p class="card-text"><small class="text-muted">Tweeted at ${tObj.timestamp}</small></p>
+    <div class="card mb-3 tweet" data-uuid="${uuid}" style="max-width: 540px;">
+      <div class="row g-0">
+        <div id="user_img" class="col-md-4">
+          <img src="${profPic}" class="img-fluid rounded-start" alt="...">
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h5 class="card-title">${tObj.author.nickname}</h5>
+            <p class="card-text">${tObj.content}</p>
+            <button class="like-btn" onclick="submitLike()" data-tweetid="${uuid}">👍 ${tObj.likes}</button>
+            <p class="card-text"><small class="text-muted">Tweeted at ${tObj.timestamp}</small></p>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
   `);
+  });
   firebase.database().ref("/number_likes").child(uuid).child("likes").on("value", ss=>{
     $(`.like-button[data-tweetid=${uuid}]`).html(`${ss.val() || 0} Likes`);
   });
@@ -200,7 +205,7 @@ let renderPage = (loggedIn, user_email)=>{
               <li id="settings">
                   <button id="prof_img_btn" onclick="settings()" style="width: 160px;">Profile Photo Upload</button>
                   <input name="prof_pic" id="prof_pic" placeholder="Image Link Here" style="display: none; width: 250px;"/>
-                  <button id="setting_update" style="display: none; width: 250px;" onclick="updateProfImg(${myuid})">Update</button>
+                  <button id="setting_update" style="display: none; width: 250px;" onclick="updateProfImg()">Update</button>
               </li>
               <li id="user_profile">
                   Profile: ${user_email}
@@ -237,6 +242,7 @@ let renderPage = (loggedIn, user_email)=>{
       </div>
     </div>
   `);
+  //here we can do your bawks or all bawks switch
   let tweetRef = firebase.database().ref("/users/" + myuid + "/bawks/");
   tweetRef.on("child_added", (ss)=>{
     let tObj = ss.val();
