@@ -33,6 +33,7 @@ function writeUserData(uuid, userId, email) {
   firebase.database().ref('users/' + uuid).set({
     username: userId,
     email: email,
+    profilePic: "src/assets/bawk.png"
   });
 }
 function login() {
@@ -68,7 +69,6 @@ function logout() {
         window.alert(errorMessage + " " + errorCode);
     });
 }
-
 /**
  * submitBawk()
  * takes in form information
@@ -88,28 +88,15 @@ function submitBawk() {
     "authorID": user.uid,
     "author": {
       "email": user.email,
-      "nickname": user.email.substring(0, user.email.indexOf('@')),
-      "profilePic": "src/assets/bawk.png"
+      "nickname": user.email.substring(0, user.email.indexOf('@'))
     }
   };
-  //updateUser(user, tweetID);
-  //renderTweet(myObj, user.uid);
   myRef.set(myObj);
 }
 
-/** NEW SHIT */
-
-/** Tweet Box
- * Character limiter
+/**
+ * Update User Profile Pic
  */
-$(document).ready(function(){
-  var maxLength = 145;
-  $("textarea").keypress(function(){
-     var length = $(this).val().length;
-     var length = maxLength - length;
-     $("#countdown").text(length);
-  })
-});
 function settings() {
   var x = document.getElementById("prof_pic");
   var y = document.getElementById("setting_update");
@@ -121,42 +108,34 @@ function settings() {
     y.style.display = "none";
   }
 }
-
 function updateProfImg(user) {
-  console.log(user);
-  console.log(user.uid);
-  var userRef = firebase.database().ref().child("/bawks").child(user.uid);
+  var userRef = firebase.database().ref().child("/users/" + user.uid + "/bawks/").child(user.uid);
   userRef.child("/profilePic/").set($("#prof_pic").val());
 }
 
-// let updateUser = (user, tweet_id)=>{;
-//   var userRef = firebase.database().ref().child("/users").child(user.uid);
-//   userRef.get().then((ss) => {
-//     // let user_data = ss.val();
-//     // if(!user_data){
-//     //   const new_data = {
-//     //     email: user.author.email,
-//     //     bawk:{
-//     //       [tweet_id] : true,
-//     //     } 
-//     //   };
-//     //   userRef.set(new_data);
-//     // } 
-//     // else{
-//     //   const new_tweet = {
-//     //       [tweet_id] : true,
-//     //   } 
-//     //   userRef.child(user.authorID + "/bawks/").update(new_tweet);
-//     // }
-//   }); 
-// }
-
+/**
+ * renderTweet - put HTML onto page with user data
+ * @param {JSON of Tweet/User info} tObj 
+ * @param {Unique ID of Tweet} uuid 
+ * 
+ * FIGURE OUT HOW PHOTOURL WORKS
+ */
 let renderTweet = (tObj, uuid)=>{
+  var user = firebase.auth().currentUser;
+  var ref = firebase.database().ref('users/' + user.pro + "/profilePic/");
+  var profPic = "";
+  ref.on('value', (snapshot) => {
+    console.log(snapshot.val());
+    profPic = snapshot.val();
+  }, (errorObject) => {
+    console.log('The read failed: ' + errorObject.name);
+  });
+  console.log(user);
   $("#tweet_list").prepend(`
 <div class="card mb-3 tweet" data-uuid="${uuid}" style="max-width: 540px;">
   <div class="row g-0">
     <div class="col-md-4">
-      <img src="${tObj.author.profilePic}" class="img-fluid rounded-start" alt="...">
+      <img src="${user.profilePic}" class="img-fluid rounded-start" alt="...">
     </div>
     <div class="col-md-8">
       <div class="card-body">
@@ -173,6 +152,9 @@ let renderTweet = (tObj, uuid)=>{
     $(`.like-button[data-tweetid=${uuid}]`).html(`${ss.val() || 0} Likes`);
   });
 }
+/**
+ * renderLogin - put HTML onto page for login
+ */
 let renderLogin = () => {
   $("body").html(`
     <div class="login-div">
@@ -186,6 +168,11 @@ let renderLogin = () => {
     </div>
   `);
 }
+/**
+ * renderPage - put page HTML on page with user info
+ * @param {userdata object} loggedIn 
+ * @param {user email id} user_email 
+ */
 let renderPage = (loggedIn, user_email)=>{
   let myuid = loggedIn.uid;
   //writeUserData(myuid, user_email.substring(0, user_email.indexOf('@')), user_email);
@@ -233,9 +220,9 @@ let renderPage = (loggedIn, user_email)=>{
                   <div class="main-tweet-row">
                       <p>media</p>
                       <p>text edit</p>
-                      <span id='countdown'> 145 </span>
+                      <span id="countdown"> 145 </span>
                       <button class="main-tweet-btn" onclick="submitBawk()"> BAWK </button>
-                      <br><h4>All Bawks ...</h4>
+                      <br><h4>Your Bawks ...</h4>
                   </div>
               </div>
           </div>
@@ -267,7 +254,6 @@ firebase.auth().onAuthStateChanged(user => {
   if (!user){
     renderLogin();
   } else {
-   //$("#login_div").html(`<button onclick="logout()">Logout</button>`);
     var user_email = firebase.auth().currentUser;
     renderPage(user, user_email.email);
   }
