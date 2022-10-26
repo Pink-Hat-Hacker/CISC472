@@ -245,7 +245,7 @@ let renderPage = (loggedIn, user_email)=>{
                   <div class="main-tweet-row">
                       <p>media</p>
                       <p>text edit</p>
-                      <span id="countdown"> 145 </span>
+                      <span id='countdown'> 145 </span>
                       <button class="main-tweet-btn" onclick="submitBawk()"> BAWK </button>
                       <br><h4>Your Bawks ...</h4>
                   </div>
@@ -262,6 +262,20 @@ let renderPage = (loggedIn, user_email)=>{
       </div>
     </div>
   `);
+
+  /** Tweet Box
+ * Character limiter
+ */
+ $(document).ready(function(){
+  var maxLength = 145;
+  $("textarea").keypress(function(){
+    console.log("here");
+     var length = $(this).val().length;
+     var length = maxLength - length;
+     $("#countdown").text(length);
+  })
+});
+
   //here we can do your bawks or all bawks switch
   let tweetRef = firebase.database().ref("/bawks/");
   tweetRef.on("child_added", (ss)=>{
