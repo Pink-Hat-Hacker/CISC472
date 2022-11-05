@@ -113,9 +113,8 @@ body {
 
 /* - middle page tweeting box- */
 .container {
-    display: block flex;
+    display: flex block;
     justify-content: center;
-    text-align: center;
 }
 .container textarea {
     margin-top: 10px;
@@ -126,6 +125,7 @@ body {
     resize: none;
 }
 .container button {
+    text-align: center;
     background: #40260aff;
     color: #ff9b27;
     border: 1px solid #ff9b27;
@@ -140,6 +140,10 @@ body {
 .container button:hover {
     background: #ff9b27;
     color: #40260aff;
+}
+.container .extra-container {
+    display: inline;
+    color: aliceblue;
 }
 /* .bottom-container {
     display: inline-block;
@@ -168,9 +172,9 @@ body {
 }
 /* - list of tweets - */
 .tweet-col {
-    position: absolute;
-    top: 40%;
-    left: 38%;
-    height: 600px;
+    display: flex;
+    justify-content: center;
+    padding-top: 1%;
     overflow-y: scroll;
+    height: 600px;
 }

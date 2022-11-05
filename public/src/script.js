@@ -250,19 +250,17 @@ let renderPage = (loggedIn, user_email)=>{
       
     <!--Main Tweeting Box-->
     <div class="container">
-        <div id="box">
-            <h2> What's on your mind? </h2>
-            <div class="bottom-container">
-                <textarea id="bawker_post" name="tweet" maxlength="145" placeholder="bawk bawk bawk..."></textarea>
-                <div class="main-tweet-row">
-                    <input name="tweet_media" id="tweet_media" placeholder="Media Link Here" style="width: 250px;"/>
-                    <p>text edit</p>
-                    <span id='countdown'> 145 </span>
-                    <button class="main-tweet-btn" onclick="submitBawk()"> BAWK </button>
-                    <br><h4>Your Bawks ...</h4>
-                </div>
-            </div>
-        </div>
+      <h2> What's on your mind? </h2>
+      <div class="input-container">
+          <textarea id="bawker_post" name="tweet" maxlength="145" placeholder="bawk bawk bawk..."></textarea>
+      </div>
+      <div class="extra-container">
+          <input name="tweet_media" id="tweet_media" placeholder="Media Link Here" style="width: 250px;"/>
+          <p>text edit</p>
+          <span id='countdown'> 145 </span>
+      </div>
+      <button class="main-tweet-btn" onclick="submitBawk()"> BAWK </button>
+      <br><h3>Your Bawks ...</h3>
     </div>
       
     <!--tweets-->
