@@ -81,11 +81,13 @@ function submitBawk() {
   var timestamp = new Date();
   timestamp = timestamp.toLocaleString();
   var bawkerPost = document.getElementById("bawker_post").value;
+  var media = document.getElementById("tweet_media").value;
   const myObj = {
     "content": bawkerPost, 
     "likes": 0, 
     "timestamp": timestamp, 
     "authorID": user.uid,
+    "media": media,
     "author": {
       "email": user.email,
       "nickname": user.email.substring(0, user.email.indexOf('@'))
@@ -136,6 +138,8 @@ let toggleLike = (tweetRef, uid)=>{
   });
 }
 let renderedTweetLikeLookup = {};
+
+
 /**
  * renderTweet - put HTML onto page with user data
  * @param {JSON of Tweet/User info} tObj 
@@ -177,6 +181,8 @@ let renderTweet = (tObj, uuid)=>{
     $(`.like-btn[data-tweetid=${uuid}]`).html(`👍 ${ss.val() || 0} Likes`);
   });
 }
+
+
 /**
  * renderLogin - put HTML onto page for login
  */
@@ -193,6 +199,8 @@ let renderLogin = () => {
     </div>
   `);
 }
+
+
 /**
  * renderPage - put page HTML on page with user info
  * @param {userdata object} loggedIn 
@@ -202,18 +210,21 @@ let renderPage = (loggedIn, user_email)=>{
   let myuid = loggedIn.uid;
   //writeUserData(myuid, user_email.substring(0, user_email.indexOf('@')), user_email);
   $("body").html(`
-    <div id="user_div">
-      <!--Top Nav-->
+    <!--Top Nav-->
+    <div class="top-nav">
       <nav class="navbar justify-content-between">
-          <a class="navbar-brand">
-              <h1 class="title"> BAWKER </h1>
-          </a>
-          <form class="search-bar">
-              <input type="search" placeholder="Search">
-              <button id="search_bar_btn" type="submit">Search</button>
-          </form>
+          <h1 class="title"> BAWKER </h1>
+          <div class="search-bar">
+            <form>
+                <input type="search" placeholder="Search">
+                <button id="search_bar_btn" type="submit">Search</button>
+            </form>
+          </div>
       </nav>
-      <!--Side Nav-->
+    </div>
+
+    <!--Side Nav-->
+    <div class="side-nav">
       <nav role="navigation" class="nav-list">
           <ul>
               <li>
@@ -235,31 +246,30 @@ let renderPage = (loggedIn, user_email)=>{
               </li>
           </ul>
       </nav>
+    </div>
       
-      <!--Main Tweeting Box-->
-      <div class="container">
-          <div id="box">
-              <h2> What's on your mind? </h2>
-              <div class="bottom-container">
-                  <textarea id="bawker_post" name="tweet" maxlength="145" placeholder="bawk bawk bawk..."></textarea>
-                  <div class="main-tweet-row">
-                      <p>media</p>
-                      <p>text edit</p>
-                      <span id='countdown'> 145 </span>
-                      <button class="main-tweet-btn" onclick="submitBawk()"> BAWK </button>
-                      <br><h4>Your Bawks ...</h4>
-                  </div>
-              </div>
-          </div>
-          
-      </div>
+    <!--Main Tweeting Box-->
+    <div class="container">
+        <div id="box">
+            <h2> What's on your mind? </h2>
+            <div class="bottom-container">
+                <textarea id="bawker_post" name="tweet" maxlength="145" placeholder="bawk bawk bawk..."></textarea>
+                <div class="main-tweet-row">
+                    <input name="tweet_media" id="tweet_media" placeholder="Media Link Here" style="width: 250px;"/>
+                    <p>text edit</p>
+                    <span id='countdown'> 145 </span>
+                    <button class="main-tweet-btn" onclick="submitBawk()"> BAWK </button>
+                    <br><h4>Your Bawks ...</h4>
+                </div>
+            </div>
+        </div>
+    </div>
       
-      <!--tweets-->
-      <div class="tweet-col">
-          <div id="tweet_list">
-              
-          </div>
-      </div>
+    <!--tweets-->
+    <div class="tweet-col">
+        <div id="tweet_list">
+            
+        </div>
     </div>
   `);
 

@@ -48,17 +48,19 @@ body {
 }
 
 /* -------- MAIN PAGE --------- */
-/* - Top of Page - */
-.title {
+/* - Top of Page/Top Nav - */
+.top-nav h1 {
     display: flex;
     justify-content: flex-start;
     margin: 10px;
     color: #ff9b27;
 }
-.search-bar {
+.top-nav form {
+    top: auto;
+    right: 10px;
     margin-right: 10px;
 }
-#search_bar_btn {
+.top-nav button {
     background: #40260aff;
     color: #ff9b27;
     border: 1px solid #ff9b27;
@@ -69,16 +71,17 @@ body {
     -webkit-transition: 0.3s;
     -moz-transition: 0.3s; 
 }
-#search_bar_btn:hover {
+.top-nav button:hover {
     background: #ff9b27;
     color: #40260aff; 
 }
 
 /* - side page - */
-.navbar {
+
+.side-nav {
     background-color: #40260aff; 
 }
-.nav-list {
+.side-nav .nav-list {
     display: flex;
     color: #ff9b27;
 }
@@ -110,30 +113,11 @@ body {
 
 /* - middle page tweeting box- */
 .container {
-    display: flex;
+    display: block flex;
     justify-content: center;
-    position: absolute;
+    text-align: center;
 }
-#box {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    height: 200px;
-    width: 50%;
-}
-.bottom-container {
-    display: inline-block;
-    position: absolute;
-    height: 82%;
-    width: 100%;
-    border-radius: 0px 0px 5px 5px;
-}
-.main-tweet-row * {
-    white-space: nowrap;
-    display: inline;
-    margin: 20px 10px 5px 5px;
-}
-textarea {
+.container textarea {
     margin-top: 10px;
     width: 100%;
     height: 90px;
@@ -141,7 +125,7 @@ textarea {
     font-size: 20px;
     resize: none;
 }
-.main-tweet-btn {
+.container button {
     background: #40260aff;
     color: #ff9b27;
     border: 1px solid #ff9b27;
@@ -153,11 +137,22 @@ textarea {
     -webkit-transition: 0.3s;
     -moz-transition: 0.3s;
 }
-.main-tweet-btn:hover {
+.container button:hover {
     background: #ff9b27;
     color: #40260aff;
 }
-
+/* .bottom-container {
+    display: inline-block;
+    position: absolute;
+    height: 82%;
+    width: 100%;
+    border-radius: 0px 0px 5px 5px;
+}
+.main-tweet-row * {
+    white-space: nowrap;
+    display: inline;
+    margin: 20px 10px 5px 5px;
+} */
 /* - tweets them selves - */
 .bottom-of-tweet {
     display: inline-block;
