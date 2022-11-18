@@ -141,9 +141,15 @@ body {
     background: #ff9b27;
     color: #40260aff;
 }
-.container .extra-container {
-    display: inline;
-    color: aliceblue;
+.extra-container input {
+    display: flex;
+    justify-self: flex-start;
+    color: #ff9b27;
+}
+.extra-container span {
+    display: flex;
+    justify-self: flex-end;
+    color: #ff9b27;
 }
 /* .bottom-container {
     display: inline-block;

@@ -8,7 +8,7 @@ const firebaseConfig = {
   appId: "1:859322932460:web:218c4619be4da4c4cc19c9",
   measurementId: "G-NLXEN0T0EP"
 };
-const app = firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
 var db = firebase.database();
 
 /**
@@ -137,9 +137,8 @@ let toggleLike = (tweetRef, uid)=>{
     return tObj;
   });
 }
+
 let renderedTweetLikeLookup = {};
-
-
 /**
  * renderTweet - put HTML onto page with user data
  * @param {JSON of Tweet/User info} tObj 
@@ -147,38 +146,38 @@ let renderedTweetLikeLookup = {};
  */
 let renderTweet = (tObj, uuid)=>{
   //var user = firebase.auth().currentUser;
-  var userEmail = tObj.authorID;
-  /** - Profile Picture - */
+  var userUniID = tObj.authorID;
   var profPic = "src/assets/bawk.png";
-  var myRef = firebase.database().ref().child("/users").child(userEmail);
+  var myRef = firebase.database().ref().child("/users").child(userUniID);
   myRef.get().then((ss) => {
     let userData = ss.val();
     if(!userData){
       //console.log("null");
-    }else{
+    } else {
       profPic = userData.profilePic;
-      $("#user_img-"+uuid).html(`<img src="${profPic}" class="img-fluid rounded-start" alt="...">`);
+      $("#user_img-"+uuid).html(`<img src="${profPic}" class="img-fluid rounded-start" alt="${tObj.author.nickname} Profile Photo"></img>`);
     }
-  $("#tweet_list").prepend(`
-    <div class="card mb-3 tweet" data-uuid="${uuid}" style="max-width: 540px;">
-      <div class="row g-0">
-        <div id="user_img" class="col-md-4">
-          <img src="${profPic}" class="img-fluid rounded-start" alt="...">
-        </div>
-        <div class="col-md-8">
-          <div class="card-body">
-            <h5 class="card-title">${tObj.author.nickname}</h5>
-            <p class="card-text">${tObj.content}</p>
-            <button class="like-btn" data-tweetid="${uuid}" onlclick="console.log("getting here")">${tObj.likes}</button>
-            <p class="card-text"><small class="text-muted">Tweeted at ${tObj.timestamp}</small></p>
+    $("#tweet_list").prepend(`
+      <div class="card mb-3 tweet" data-uuid="${uuid}" style="max-width: 540px;">
+        <div class="row g-0">
+          <div id="user_img" class="col-md-4">
+            <img src="${profPic}" class="img-fluid rounded-start" alt=""${tObj.author.nickname} Profile Photo"">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">${tObj.author.nickname}</h5>
+              <p class="card-text">${tObj.content}</p>
+              <button class="like-btn" data-tweetid="${uuid}">${tObj.likes} Likes</button>
+              <p class="card-text"><small class="text-muted">Tweeted at ${tObj.timestamp}</small></p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  `);
-  });
-  firebase.database().ref("/likes").child(uuid).child("likes").on("value", ss=>{
-    $(`.like-btn[data-tweetid=${uuid}]`).html(`👍 ${ss.val() || 0} Likes`);
+    `);
+    var tweetLikeRef = firebase.database().ref("/likes").child(uuid).child("likes");
+    tweetLikeRef.on("value", ss => {
+      $(`.like-btn[data-tweetid=${uuid}]`).html(`👍 ${ss.val() || 0} Likes`);
+    });
   });
 }
 
@@ -251,16 +250,15 @@ let renderPage = (loggedIn, user_email)=>{
     <!--Main Tweeting Box-->
     <div class="container">
       <h2> What's on your mind? </h2>
-      <div class="input-container">
+      <div>
           <textarea id="bawker_post" name="tweet" maxlength="145" placeholder="bawk bawk bawk..."></textarea>
       </div>
       <div class="extra-container">
           <input name="tweet_media" id="tweet_media" placeholder="Media Link Here" style="width: 250px;"/>
-          <p>text edit</p>
           <span id='countdown'> 145 </span>
       </div>
       <button class="main-tweet-btn" onclick="submitBawk()"> BAWK </button>
-      <br><h3>Your Bawks ...</h3>
+      <br><h3>All Bawks ...</h3>
     </div>
       
     <!--tweets-->
@@ -277,7 +275,6 @@ let renderPage = (loggedIn, user_email)=>{
  $(document).ready(function(){
   var maxLength = 145;
   $("textarea").keypress(function(){
-    console.log("here");
      var length = $(this).val().length;
      var length = maxLength - length;
      $("#countdown").text(length);
@@ -289,12 +286,12 @@ let renderPage = (loggedIn, user_email)=>{
   tweetRef.on("child_added", (ss)=>{
     let tObj = ss.val();
     renderTweet(tObj, ss.key);
-    $(".like-btn").off("click");
-    $(".like-btn").on("click", (evt)=>{
-      let clickedTweet = $(evt.currentTarget).attr("data-tweetid");
-      let mylikesRef = firebase.database().ref("/likes").child(clickedTweet);
-      toggleLike(mylikesRef, myuid);
-    });
+    // $(".like-btn").off("click");
+    // $(".like-btn").on("click", (evt)=>{
+    //   let clickedTweet = $(evt.currentTarget).attr("data-tweetid");
+    //   let mylikesRef = firebase.database().ref("/likes").child(clickedTweet);
+    //   toggleLike(mylikesRef, myuid);
+    // });
   });
 };
 
